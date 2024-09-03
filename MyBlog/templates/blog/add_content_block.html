@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Add a content block to "{{ post.title }}"</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ content_block_form.as_p }}
+    <button type="submit">Add Block</button>
+  </form>
+{% endblock %}

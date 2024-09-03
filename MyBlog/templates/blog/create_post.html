@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container2 mt-5 d-flex">
+    <!-- Sidebar2 -->
+    <div id="sidebar2" class="mt-5">
+        <h2 class="ml-2">Create Post</h2>
+        <div class="ml-4" id="sidebar2-content"></div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="flex-grow-1 ml-5 mt-5">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3 mt-5">
+                <div id="post-form">
+                    {{ post_form.as_p }}
+                </div>
+                {% if post_form.errors %}
+                    <div class="alert alert-danger">
+                        {{ post_form.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <h3>Content Blocks</h3>
+            <div id="content-blocks">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="content-block">
+                        {{ form.as_p }}
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="add-content-block">Add Content Block</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+
+        <!-- Template for new content blocks -->
+        <div class="content-block d-none" id="empty-form-template">
+            {{ formset.empty_form.as_p }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const contentBlocksDiv = document.getElementById('content-blocks');
+        const totalFormsInput = document.getElementById('id_content_blocks-TOTAL_FORMS');
+        const emptyFormTemplate = document.getElementById('empty-form-template').cloneNode(true);
+        const sidebar2ContentDiv = document.getElementById('sidebar2-content');
+        emptyFormTemplate.removeAttribute('id'); // Remove the ID to avoid duplicates
+
+        function updateFormIndices() {
+            const forms = contentBlocksDiv.querySelectorAll('.content-block');
+            forms.forEach((form, index) => {
+                form.querySelectorAll('input, select, textarea').forEach(input => {
+                    if (input.name) {
+                        input.name = input.name.replace(/content_blocks-\d+-/, `content_blocks-${index}-`);
+                    }
+                    if (input.id) {
+                        input.id = input.id.replace(/id_content_blocks-\d+-/, `id_content_blocks-${index}-`);
+                    }
+                });
+            });
+            totalFormsInput.value = forms.length;
+        }
+
+        function updateSidebar2() {
+            sidebar2ContentDiv.innerHTML = ''; // Clear existing sidebar2 content
+
+            // Add labels for main form fields, excluding 'clear' fields
+            const mainFormDiv = document.getElementById('post-form');
+            const labels = mainFormDiv.querySelectorAll('label');
+            labels.forEach((label) => {
+                if (label.htmlFor.includes('clear')) return; // Skip 'clear' labels
+                
+                const associatedField = document.getElementById(label.htmlFor);
+                if (associatedField) {
+                    const labelClone = label.cloneNode(true);
+                    const div = document.createElement('div');
+                    div.style.marginBottom = `${associatedField.offsetHeight - 13}px`; // Adjust spacing as needed
+                    div.appendChild(labelClone);
+                    sidebar2ContentDiv.appendChild(div);
+                }
+            });
+
+            // Add headings for content blocks
+            const contentBlocks = contentBlocksDiv.querySelectorAll('.content-block');
+            contentBlocks.forEach((block, index) => {
+                const heading = document.createElement('div');
+                heading.textContent = `Content Block ${index + 1}:`;
+
+
+                sidebar2ContentDiv.appendChild(heading);
+
+                // Ensure automatic spacing based on content block height
+                const firstInput = block.querySelector('input, select, textarea');
+                if (firstInput) {
+                    const blockHeight = block.offsetHeight;
+                    heading.style.marginBottom = `${blockHeight + 32}px`; // Match spacing to content block height
+                }
+            });
+
+            // Ensure sidebar height matches content height
+            const contentHeight = document.querySelector('.container2').offsetHeight;
+            document.getElementById('sidebar2').style.height = `${contentHeight}px`;
+        }
+
+        document.getElementById('add-content-block').addEventListener('click', function () {
+            const formIdx = contentBlocksDiv.querySelectorAll('.content-block').length;
+            const newForm = emptyFormTemplate.cloneNode(true);
+            newForm.classList.remove('d-none');
+            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formIdx);
+            contentBlocksDiv.appendChild(newForm);
+            updateFormIndices();
+            updateSidebar2(); // Update sidebar2 after adding a new content block
+        });
+
+        // Initial updates
+        updateFormIndices();  
+        updateSidebar2();  
+    });
+</script>
+{% endblock %}

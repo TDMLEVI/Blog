@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}<title>Single Post</title>{% endblock title %}
+
+{% block content %}
+<main id="main">
+  <section class="single-post-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9 post-content" data-aos="fade-up">
+          <!-- ======= Single Post Content ======= -->
+          <div class="single-post">
+            <div class="post-meta">
+              <span class="date">{{ post.category.name }}</span>
+              <span class="mx-1">&bullet;</span>
+              <span>{{ post.created_at|date:"M jS 'y" }}</span>
+            </div>
+            <div class="post-meta">
+              <img src="{{ post.author.userprofile.image.url }}" alt="" class="base-pfp mr-1">
+              <span>{{ post.author }}</span>
+            </div>
+            <h1 class="mb-5">{{ post.title }}</h1>
+
+            <p class="mb-5 txt">{{ post.intro }}</p>
+
+            {% for block in content_blocks %}
+              {% if block.block_type == 'image' %}
+                <figure class="my-4">
+                  <img src="{{ block.image.url }}" alt="{{ block.caption }}" class="post-image">
+                  {% if block.caption %}
+                    <figcaption>{{ block.caption }}</figcaption>
+                  {% endif %}
+                </figure>
+              {% elif block.block_type == 'text' %}
+                <p class="txt">{{ block.content }}</p>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <!-- End Single Post Content -->
+           
+          <!-- Comments Section -->
+          <div class="comments-section mb-2">
+            <h3>Comments {{total_comments}}</h3>
+            {% if user.is_authenticated %}
+              <!-- Comment Form -->
+              <form method="POST" class="comment-form mt-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ comment_form.content|as_crispy_field }}
+                </div>
+                <input type="hidden" name="parent_id" id="parent_id">
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+              </form>
+            {% else %}
+              <p>You need to <a href="{% url 'Account:login' %}" class="text-primary">log in</a> to post a comment.</p>
+            {% endif %}
+            {% include 'comments/comment_thread.html' with comments=root_comments %}
+          </div>
+        </div>
+          
+
+        <!-- Sidebar with Related Posts -->
+        <div class="col-md-3">
+          <div class="card" style="height: 100%;">
+            <div class="card-header">
+              <h5>Related Posts</h5>
+            </div>
+            <ul class="list-group list-group-flush" style="height: calc(100% - 56px);">
+              {% if related_posts %}
+                {% for related_post in related_posts %}
+                  <li class="list-group-item d-flex align-items-center">
+                    {% if related_post.BlogCover %}
+                      <img src="{{ related_post.BlogCover.url }}" alt="{{ related_post.title }}" class="base-pfp mr-2">
+                    {% endif %}
+                    <a href="{% url 'Blog:single_post' id=related_post.id %}">{{ related_post.title|truncatewords:5 }}</a>
+                  </li>
+                {% endfor %}
+              {% else %}
+                <li class="list-group-item">There are no related posts.</li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock content %}
+
+{% block js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Toggle reply form visibility
+      document.querySelectorAll('.reply-btn').forEach(button => {
+          button.addEventListener('click', function(event) {
+              event.preventDefault();
+              const commentId = this.getAttribute('data-comment-id');
+              const replyForm = document.querySelector(`#reply-form-${commentId}`);
+              
+              if (replyForm) {
+                  replyForm.style.display = (replyForm.style.display === 'block') ? 'none' : 'block';
+              }
+          });
+      });
+
+      // Toggle replies visibility and button text
+      document.querySelectorAll('.show-replies-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+          const commentId = this.getAttribute('data-comment-id');
+          const repliesDiv = document.getElementById('replies-' + commentId);
+          const isHidden = repliesDiv.style.display === 'none';
+
+          // Toggle visibility for the current replies div
+          repliesDiv.style.display = isHidden ? 'block' : 'none';
+
+          // Toggle button text
+          this.textContent = isHidden ? 'Hide Replies' : 'Show Replies (' + repliesDiv.children.length + ')';
+
+          // If showing, also show all nested replies
+          if (isHidden) {
+            showAllNestedReplies(repliesDiv);
+          }
+        });
+      });
+
+      function showAllNestedReplies(parentDiv) {
+        // Show all nested replies
+        parentDiv.querySelectorAll('.replies').forEach(function (nestedDiv) {
+          nestedDiv.style.display = 'block'; // Show nested replies
+        });
+      }
+    });
+  </script>
+{% endblock js %}

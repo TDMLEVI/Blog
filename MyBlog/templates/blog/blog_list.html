@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>ZenBlog Bootstrap Template - Index</title>
+{% endblock title %}
+
+{% block content %}
+<main id="main">
+  <!-- Hero Slider Section -->
+    <div class="container-md-12" style="overflow: hidden" data-aos="fade-in">
+      <div class="row">
+        <div class="col-12">
+          <div class="swiper sliderFeaturedPosts">
+            <div class="swiper-wrapper">
+              {% for post in trending_posts|slice:03 %}
+                  <div class="swiper-slide">
+                    <a href="{% url 'Blog:single_post' post.id %}" class="img-bg d-flex align-items-end" style="background-image: url('{{ post.BlogCover.url }}');">
+                      <div class="img-bg-inner">
+                        <h2>{{ post.title }}</h2>
+                        <p class="intro">{{ post.intro|slice:":150" }}...</p>
+                      </div>
+                    </a>
+                  </div>
+              {% endfor %}
+            </div>
+            <div class="custom-swiper-button-next">
+              <span class="bi-chevron-right"></span>
+            </div>
+            <div class="custom-swiper-button-prev">
+              <span class="bi-chevron-left"></span>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- End Hero Slider Section -->
+
+  <!-- ======= Post Grid Section ======= -->
+<section id="posts" class="posts col-md-12">
+  <div class="container-md-12" data-aos="fade-up">
+    <div class="row g-4">
+      <!-- Main Wrapper Aside Block -->
+      <aside class="col-lg-12 aside-wrapper">
+        <div class="row g-4">
+          <!-- Main Content Aside Block -->
+          <aside class="col-lg-9 main-content">
+            <div class="row g-4">
+              <div class="col-lg-5">
+                {% if first_post %}
+                  <div class="post-entry-1 lg">
+                    <a href="{% url 'Blog:single_post' first_post.id %}"><img src="{{ first_post.BlogCover.url }}" alt="" class="img-fluid"></a>
+                    <div class="post-meta"><span class="date">{{ first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ first_post.created_at|date:"M d, Y" }}</span></div>
+                    <h2><a href="{% url 'Blog:single_post' first_post.id %}">{{ first_post.title }}</a></h2>
+                    <p class="mb-4 d-block txt">{{ first_post.intro|slice:":400" }}...</p>
+                    <div class="d-flex align-items-center author">
+                      <div class="photo"><img src="{% static 'assets/img/person-1.jpg' %}" alt="" class="base-pfp"></div>
+                      <div class="name">
+                        <h3 class="m-0 p-0">{{ first_post.author.username }}</h3>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="col-lg-7">
+                <div class="row g-5">
+                  {% for post in remaining_posts %}
+                    <div class="col-lg-6 border-start custom-border">
+                      <div class="post-entry-1">
+                        <a href="{% url 'Blog:single_post' post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
+                        <div class="post-meta">
+                          <span class="date">{{ post.category.name }}</span> <span class="mx-1">&bullet;</span>
+                          <span>{{ post.created_at|date:"M d, Y" }}</span></div>
+                        <h2><a href="{% url 'Blog:single_post' post.id %}">{{ post.title|truncatechars:85 }}</a></h2>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <section class="category-section">
+              <div class="container" data-aos="fade-up">
+                  <div class="section-header d-flex justify-content-between align-items-center mb-5">
+                      <h2>Culture</h2>
+                      <div><a href="{% url 'Blog:category_posts' slug='culture' %}" class="more">See All Culture</a></div>
+                  </div>
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <!-- Main post -->
+                          {% if culture_first_post %}
+                          <div class="d-lg-flex post-entry-2">
+                              <a href="{% url 'Blog:single_post' id=culture_first_post.id %}" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                  <img src="{{ culture_first_post.BlogCover.url }}" alt="" class="img-fluid">
+                              </a>
+                              <div>
+                                  <div class="post-meta"><span class="date">{{ culture_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ culture_first_post.created_at|date:"M d, Y" }}</span></div>
+                                  <h3><a href="{% url 'Blog:single_post' id=culture_first_post.id %}">{{ culture_first_post.title|truncatechars:65 }}</a></h3>
+                                  <p class="txt">{{ culture_first_post.intro|truncatechars:350 }}</p>
+                                  <div class="d-flex align-items-center author">
+                                      <div class="photo"><img src="{{ culture_first_post.author.userprofile.image.url }}" alt="" class="base-pfp"></div>
+                                      <div class="name">
+                                          <h3 class="m-0 p-0">{{ culture_first_post.author.username }}</h3>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          {% endif %}
+                          
+                          <!-- Additional posts -->
+                          <div class="row">
+                              {% for post in culture_remaining_posts %}
+                              <div class="col-lg-4">
+                                  <div class="post-entry-1 border-bottom">
+                                      <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
+                                      <div class="post-meta">
+                                          <span class="date">{{ post.category.name }}</span>
+                                          <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                      </div>
+                                      <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
+                                      <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
+                                      <div class="d-flex align-items-center author">
+                                          <div class="photo">
+                                              <img src="{{ post.author.userprofile.image.url }}" alt="" class="base-pfp">
+                                          </div>
+                                          <div class="name">
+                                              <h3 class="m-0 p-0">{{ post.author.username }}</h3>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                              {% endfor %}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          
+          
+          <section class="category-section">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header d-flex justify-content-between align-items-center mb-5">
+                    <h2>Business</h2>
+                    <div><a href="{% url 'Blog:category_posts' slug='business' %}" class="more">See All Business</a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Main post -->
+                        {% if business_first_post %}
+                        <div class="d-lg-flex post-entry-2">
+                            <a href="{% url 'Blog:single_post' id=business_first_post.id %}" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                <img src="{{ business_first_post.BlogCover.url }}" alt="" class="img-fluid">
+                            </a>
+                            <div>
+                                <div class="post-meta"><span class="date">{{ business_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ business_first_post.created_at|date:"M d, Y" }}</span></div>
+                                <h3><a href="{% url 'Blog:single_post' id=business_first_post.id %}">{{ business_first_post.title|truncatechars:65 }}</a></h3>
+                                <p class="txt">{{ business_first_post.intro|truncatechars:350 }}</p>
+                                <div class="d-flex align-items-center author">
+                                    <div class="photo"><img src="{{ business_first_post.author.userprofile.image.url }}" alt="" class="base-pfp"></div>
+                                    <div class="name">
+                                        <h3 class="m-0 p-0">{{ business_first_post.author.username }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- Additional posts -->
+                        <div class="row">
+                          {% for post in business_remaining_posts %}
+                          <div class="col-lg-4">
+                            <div class="post-entry-1 border-bottom">
+                              <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
+                              <div class="post-meta">
+                                <span class="date">{{ post.category.name }}</span>
+                                <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                              </div>
+                              <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
+                              <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
+                              <div class="d-flex align-items-center author">
+                                <div class="photo">
+                                  <img src="{{ post.author.userprofile.image.url }}" alt="" class="base-pfp">
+                                </div>
+                                <div class="name">
+                                  <h3 class="m-0 p-0">{{ post.author.username }}</h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </section>          
+          
+          <section class="category-section">
+            <div class="container" data-aos="fade-up">
+                <div class="section-header d-flex justify-content-between align-items-center mb-5">
+                    <h2>Lifestyle</h2>
+                    <div><a href="{% url 'Blog:category_posts' slug='lifestyle' %}" class="more">See All Lifestyle</a></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Main post -->
+                         {% if lifestyle_first_post %}
+                        <div class="d-lg-flex post-entry-2">
+                            <a href="{% url 'Blog:single_post' id=lifestyle_first_post.id %}" class="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
+                                <img src="{{ lifestyle_first_post.BlogCover.url }}" alt="" class="img-fluid">
+                            </a>
+                            <div>
+                                <div class="post-meta"><span class="date">{{ lifestyle_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ lifestyle_first_post.created_at|date:"M d, Y" }}</span></div>
+                                <h3><a href="{% url 'Blog:single_post' id=lifestyle_first_post.id %}">{{ lifestyle_first_post.title|truncatechars:65 }}</a></h3>
+                                <p class="txt">{{ lifestyle_first_post.intro|truncatechars:350 }}</p>
+                                <div class="d-flex align-items-center author">
+                                    <div class="photo"><img src="{{ lifestyle_first_post.author.userprofile.image.url }}" alt="" class="base-pfp"></div>
+                                    <div class="name">
+                                        <h3 class="m-0 p-0">{{ lifestyle_first_post.author.username }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- Additional posts -->
+                        <div class="row">
+                          {% for post in lifestyle_remaining_posts %}
+                          <div class="col-lg-4">
+                            <div class="post-entry-1 border-bottom">
+                              <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
+                              <div class="post-meta">
+                                <span class="date">{{ post.category.name }}</span>
+                                <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                              </div>
+                              <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
+                              <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
+                              <div class="d-flex align-items-center author">
+                                <div class="photo">
+                                  <img src="{{ post.author.userprofile.image.url }}" alt="" class="base-pfp">
+                                </div>
+                                <div class="name">
+                                  <h3 class="m-0 p-0">{{ post.author.username }}</h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </section>          
+        </aside>
+
+          <!-- Sidebar Aside Block -->
+          <aside class="col-lg-3 sidebar">
+            <ul class="nav nav-pills custom-tab-nav mb-4" id="pills-tab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-popular-tab" data-bs-toggle="pill" data-bs-target="#pills-popular" type="button" role="tab" aria-controls="pills-popular" aria-selected="true">Popular</button>
+              </li>
+              <li class="nav-item ml-1" role="presentation">
+                <button class="nav-link" id="pills-trending-tab" data-bs-toggle="pill" data-bs-target="#pills-trending" type="button" role="tab" aria-controls="pills-trending" aria-selected="false">Trending</button>
+              </li>
+              <li class="nav-item ml-1" role="presentation">
+                <button class="nav-link" id="pills-latest-tab" data-bs-toggle="pill" data-bs-target="#pills-latest" type="button" role="tab" aria-controls="pills-latest" aria-selected="false">Latest</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+              <!-- Popular -->
+              <div class="tab-pane fade show active" id="pills-popular" role="tabpanel" aria-labelledby="pills-popular-tab">
+                {% for popular_post in popular_posts %}
+                <div class="post-entry-1 border-bottom">
+                  <div class="post-meta">
+                    <span class="date">{{ popular_post.category.name }}</span> 
+                    <span class="mx-1">&bullet;</span> 
+                    <span>{{ popular_post.created_at|date:"M j, Y" }}</span>
+                  </div>
+                  <h2 class="mb-2">
+                    <a href="{% url 'Blog:single_post' popular_post.id %}">{{ popular_post.title }}</a>
+                  </h2>
+                  <span class="author mb-3 d-block">{{ popular_post.author.get_full_name }}</span>
+                </div>
+                {% endfor %}
+              </div> <!-- End Popular -->
+
+              <!-- Trending -->
+              <div class="tab-pane fade" id="pills-trending" role="tabpanel" aria-labelledby="pills-trending-tab">
+                {% for trending_post in trending_posts %}
+                <div class="post-entry-1 border-bottom">
+                  <div class="post-meta">
+                    <span class="date">{{ trending_post.category.name }}</span> 
+                    <span class="mx-1">&bullet;</span> 
+                    <span>{{ trending_post.created_at|date:"M j, Y" }}</span>
+                  </div>
+                  <h2 class="mb-2">
+                    <a href="{% url 'Blog:single_post' trending_post.id %}">{{ trending_post.title }}</a>
+                  </h2>
+                  <span class="author mb-3 d-block">{{ trending_post.author.get_full_name }}</span>
+                </div>
+                {% endfor %}
+              </div> <!-- End Trending -->
+
+              <!-- Latest -->
+              <div class="tab-pane fade" id="pills-latest" role="tabpanel" aria-labelledby="pills-latest-tab">
+                {% for latest_post in latest_posts %}
+                <div class="post-entry-1 border-bottom">
+                  <div class="post-meta">
+                    <span class="date">{{ latest_post.category.name }}</span> 
+                    <span class="mx-1">&bullet;</span> 
+                    <span>{{ latest_post.created_at|date:"M j, Y" }}</span>
+                  </div>
+                  <h2 class="mb-2">
+                    <a href="{% url 'Blog:single_post' latest_post.id %}">{{ latest_post.title }}</a>
+                  </h2>
+                  <span class="author mb-3 d-block">{{ latest_post.author.get_full_name }}</span>
+                </div>
+                {% endfor %}
+              </div> <!-- End Latest -->
+            </div>
+          </aside>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section> <!-- End Post Grid Section -->
+</main>
+{% endblock %}

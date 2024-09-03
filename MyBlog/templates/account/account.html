@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}<title>Account</title>{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Account</h2>
+            <p>Email: <span class="text-muted">{{ user.email }}</span> <a href="{% url 'Account:change_email' %}">Change</a></p>
+            <a href="{% url 'Account:change_password' %}" class="btn btn-secondary">Change Password</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

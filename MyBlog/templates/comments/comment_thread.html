@@ -1,0 +1,50 @@
+{% load static %}
+{% for comment in comments %}
+  <div class="comment" id="comment-{{ comment.id }}">
+    <p class="mb-0">
+      {% if comment.author.userprofile.image %}
+        <img src="{{ comment.author.userprofile.image.url }}" alt="Profile Picture" class="base-pfp">
+      {% else %}
+        <img src="{% static 'assets/img/default-user.png' %}" alt="Default Profile Picture" class="base-pfp">
+      {% endif %}
+      <strong>{{ comment.author.username }}</strong>
+      <!-- Timestamp for how long ago the comment was posted -->
+      <small class="text-muted ml-1">{{ comment.created_at|timesince }} ago</small>
+    </p>
+    <p class="mb-0 cm-content">{{ comment.content }}</p>
+    
+    {% if user.is_authenticated %}
+      <button class="reply-btn" data-comment-id="{{ comment.id }}">Reply</button>
+
+      <!-- Delete Button for the Comment Owner -->
+      {% if comment.author == user %}
+        <form method="POST" action="{% url 'Comments:delete_comment' comment.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="delete-btn">Delete</button>
+        </form>
+      {% endif %}
+  
+      <!-- Reply Form for this Comment -->
+      <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+        <form method="POST" action="{% url 'Comments:add_reply' post.id %}">
+          {% csrf_token %}
+          <textarea name="content" placeholder="Enter your reply..." required></textarea>
+          <input type="hidden" name="parent" value="{{ comment.id }}">
+          <button type="submit">Post Reply</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <div>
+      <!-- Display replies recursively -->
+      {% if comment.children.exists %}
+        {% if comment.parent == None %}
+          <button class="show-replies-btn mb-2" data-comment-id="{{ comment.id }}">Show Replies ({{ comment.count_replies }})</button>
+        {% endif %}
+        <div class="replies" id="replies-{{ comment.id }}" style="display:none;">
+            {% include 'comments/comment_thread.html' with comments=comment.children.all %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
