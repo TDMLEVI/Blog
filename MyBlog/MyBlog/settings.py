@@ -29,6 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 # ALLOWED_HOSTS = ['192.168.100.76']
 
+# Set session expiry to 1 month (in seconds)
+SESSION_COOKIE_AGE = 2592000  # 1 month = 30 days * 24 hours * 60 minutes * 60 seconds
+
+# Optionally, ensure the session cookie is persistent
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Application definition
 

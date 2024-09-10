@@ -20,14 +20,30 @@ class TrendingPostsMixin:
         last_7_days = timezone.now() - timedelta(days=7)
         return Post.objects.filter(last_viewed__gte=last_7_days).order_by('-views')[:5]
 
-class BlogListView(TrendingPostsMixin, ListView):
+class PostViewTrackingMixin:
+    def track_post_views(self, post):
+        session = self.request.session
+        post_id = str(post.id)  # Convert post id to string for session storage
+
+        # Check if the post id is already in the session (i.e., viewed by this user)
+        if not session.get(f'viewed_post_{post_id}'):
+            post.increment_views()  # Increment views only if not already viewed
+            session[f'viewed_post_{post_id}'] = True  # Mark post as viewed
+
+class BlogListView(PostViewTrackingMixin, TrendingPostsMixin, ListView):
     model = Post
     template_name = 'blog/blog_list.html'
     context_object_name = 'posts'
     paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.order_by('-created_at')
+        posts = Post.objects.order_by('-created_at')
+        
+        # Track views for all posts in the queryset
+        for post in posts:
+            self.track_post_views(post)
+            
+        return posts
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,7 +76,7 @@ class BlogListView(TrendingPostsMixin, ListView):
         }
 
 
-class SinglePostView(DetailView):
+class SinglePostView(PostViewTrackingMixin, DetailView):
     model = Post
     template_name = 'blog/single_post.html'
     context_object_name = 'post'
@@ -68,9 +84,9 @@ class SinglePostView(DetailView):
 
     def get_object(self):
         post = super().get_object()
-        post.increment_views()
+        self.track_post_views(post)  # Call the mixin method to track views
         return post
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
@@ -81,6 +97,7 @@ class SinglePostView(DetailView):
             'comment_form': CommentForm(),
             'root_comments': self.object.comments.filter(parent__isnull=True),
             'total_comments': self.object.comments.count(),
+            'total_views': self.object.views,  # Pass total views
         })
         return context
 
@@ -99,15 +116,21 @@ class SinglePostView(DetailView):
             return redirect('Blog:single_post', id=post.id)
         return self.render_to_response(self.get_context_data(form=form))
 
-class CategoryPostsView(ListView):
+class CategoryPostsView(PostViewTrackingMixin, ListView):
     model = Post
     template_name = 'blog/category_posts.html'
     context_object_name = 'posts'
-    paginate_by = 2
+    paginate_by = 15
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, slug=self.kwargs['slug'])
-        return Post.objects.filter(category=self.category).order_by('-created_at')
+        posts = Post.objects.filter(category=self.category).order_by('-created_at')
+        
+        # Track views for all posts in the queryset
+        for post in posts:
+            self.track_post_views(post)
+            
+        return posts
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -125,11 +148,15 @@ class CategoryPostsView(ListView):
         last_7_days = timezone.now() - timedelta(days=7)
         return Post.objects.filter(last_viewed__gte=last_7_days).order_by('-views')[:5]
     
-class SearchView(TrendingPostsMixin, View):
+class SearchView(PostViewTrackingMixin, TrendingPostsMixin, View):
     def get(self, request):
         query = request.GET.get('q', '')
         posts = Post.objects.filter(Q(title__icontains=query) | Q(intro__icontains=query)).order_by('-created_at') if query else Post.objects.none()
 
+        # Track views for all posts in the search results
+        for post in posts:
+            self.track_post_views(post)
+        
         paginator = Paginator(posts, 15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)

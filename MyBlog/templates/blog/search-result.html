@@ -23,6 +23,8 @@
                                                 <span class="date">{{ post.category.name }}</span> 
                                                 <span class="mx-1">&bullet;</span> 
                                                 <span>{{ post.created_at|date:"M j, Y" }}</span>
+                                                <span class="mx-1">&bullet;</span>
+                                                <span>Views: {{ post.views }}</span>  <!-- Display total views here -->
                                             </div>
                                             <h3><a href="{% url 'Blog:single_post' post.id %}">{{ post.title }}</a></h3>
                                             <p class="txt">{{ post.intro|slice:100 }}...</p>
@@ -89,6 +91,8 @@
                                 <span class="date">{{ popular_post.category.name }}</span> 
                                 <span class="mx-1">&bullet;</span> 
                                 <span>{{ popular_post.created_at|date:"M j, Y" }}</span>
+                                <span class="mx-1">&bullet;</span>
+                                <span>Views: {{ popular_post.views }}</span>  <!-- Display total views here -->
                             </div>
                             <h2 class="mb-2">
                                 <a href="{% url 'Blog:single_post' popular_post.id %}">{{ popular_post.title }}</a>
@@ -106,6 +110,8 @@
                                 <span class="date">{{ trending_post.category.name }}</span> 
                                 <span class="mx-1">&bullet;</span> 
                                 <span>{{ trending_post.created_at|date:"M j, Y" }}</span>
+                                <span class="mx-1">&bullet;</span>
+                                <span>Views: {{ trending_post.views }}</span>  <!-- Display total views here -->
                             </div>
                             <h2 class="mb-2">
                                 <a href="{% url 'Blog:single_post' trending_post.id %}">{{ trending_post.title }}</a>
@@ -123,6 +129,8 @@
                                 <span class="date">{{ latest_post.category.name }}</span> 
                                 <span class="mx-1">&bullet;</span> 
                                 <span>{{ latest_post.created_at|date:"M j, Y" }}</span>
+                                <span class="mx-1">&bullet;</span>
+                                <span>Views: {{ latest_post.views }}</span>  <!-- Display total views here -->
                             </div>
                             <h2 class="mb-2">
                                 <a href="{% url 'Blog:single_post' latest_post.id %}">{{ latest_post.title }}</a>

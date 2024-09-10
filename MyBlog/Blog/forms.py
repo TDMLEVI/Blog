@@ -7,7 +7,7 @@ from crispy_forms.layout import Submit
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'slug', 'BlogCover', 'intro', 'category']
+        fields = ['title', 'BlogCover', 'intro', 'category']
         widgets = {
             'intro': forms.Textarea(attrs={
                 'cols': 30,  # Width of the textarea

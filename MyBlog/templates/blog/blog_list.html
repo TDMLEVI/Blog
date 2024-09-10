@@ -51,7 +51,13 @@
                 {% if first_post %}
                   <div class="post-entry-1 lg">
                     <a href="{% url 'Blog:single_post' first_post.id %}"><img src="{{ first_post.BlogCover.url }}" alt="" class="img-fluid"></a>
-                    <div class="post-meta"><span class="date">{{ first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ first_post.created_at|date:"M d, Y" }}</span></div>
+                    <div class="post-meta">
+                      <span class="date">{{ first_post.category.name }}</span> 
+                      <span class="mx-1">&bullet;</span> 
+                      <span>{{ first_post.created_at|date:"M d, Y" }}</span>
+                      <span class="mx-1">&bullet;</span>
+                      <span>Views: {{ first_post.views }}</span>  <!-- Display total views here -->
+                    </div>
                     <h2><a href="{% url 'Blog:single_post' first_post.id %}">{{ first_post.title }}</a></h2>
                     <p class="mb-4 d-block txt">{{ first_post.intro|slice:":400" }}...</p>
                     <div class="d-flex align-items-center author">
@@ -71,8 +77,12 @@
                       <div class="post-entry-1">
                         <a href="{% url 'Blog:single_post' post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
                         <div class="post-meta">
-                          <span class="date">{{ post.category.name }}</span> <span class="mx-1">&bullet;</span>
-                          <span>{{ post.created_at|date:"M d, Y" }}</span></div>
+                          <span class="date">{{ post.category.name }}</span> 
+                          <span class="mx-1">&bullet;</span>
+                          <span>{{ post.created_at|date:"M d, Y" }}</span>
+                          <span class="mx-1">&bullet;</span>
+                          <span>Views: {{ post.views }}</span>  <!-- Display total views here -->
+                        </div>
                         <h2><a href="{% url 'Blog:single_post' post.id %}">{{ post.title|truncatechars:85 }}</a></h2>
                       </div>
                     </div>
@@ -96,7 +106,13 @@
                                   <img src="{{ culture_first_post.BlogCover.url }}" alt="" class="img-fluid">
                               </a>
                               <div>
-                                  <div class="post-meta"><span class="date">{{ culture_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ culture_first_post.created_at|date:"M d, Y" }}</span></div>
+                                  <div class="post-meta">
+                                    <span class="date">{{ culture_first_post.category.name }}</span> 
+                                    <span class="mx-1">&bullet;</span> 
+                                    <span>{{ culture_first_post.created_at|date:"M d, Y" }}</span>
+                                    <span class="mx-1">&bullet;</span>
+                                    <span>Views: {{ culture_first_post.views }}</span>  <!-- Display total views here -->
+                                  </div>
                                   <h3><a href="{% url 'Blog:single_post' id=culture_first_post.id %}">{{ culture_first_post.title|truncatechars:65 }}</a></h3>
                                   <p class="txt">{{ culture_first_post.intro|truncatechars:350 }}</p>
                                   <div class="d-flex align-items-center author">
@@ -117,7 +133,10 @@
                                       <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
                                       <div class="post-meta">
                                           <span class="date">{{ post.category.name }}</span>
-                                          <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                          <span class="mx-1">&bullet;</span> 
+                                          <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                          <span class="mx-1">&bullet;</span>
+                                          <span>Views: {{ post.views }}</span>  <!-- Display total views here -->
                                       </div>
                                       <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
                                       <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
@@ -154,7 +173,13 @@
                                 <img src="{{ business_first_post.BlogCover.url }}" alt="" class="img-fluid">
                             </a>
                             <div>
-                                <div class="post-meta"><span class="date">{{ business_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ business_first_post.created_at|date:"M d, Y" }}</span></div>
+                                <div class="post-meta">
+                                  <span class="date">{{ business_first_post.category.name }}</span> 
+                                  <span class="mx-1">&bullet;</span> 
+                                  <span>{{ business_first_post.created_at|date:"M d, Y" }}</span>
+                                  <span class="mx-1">&bullet;</span>
+                                  <span>Views: {{ business_first_post.views }}</span>  <!-- Display total views here -->
+                                </div>
                                 <h3><a href="{% url 'Blog:single_post' id=business_first_post.id %}">{{ business_first_post.title|truncatechars:65 }}</a></h3>
                                 <p class="txt">{{ business_first_post.intro|truncatechars:350 }}</p>
                                 <div class="d-flex align-items-center author">
@@ -174,7 +199,10 @@
                               <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
                               <div class="post-meta">
                                 <span class="date">{{ post.category.name }}</span>
-                                <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                <span class="mx-1">&bullet;</span> 
+                                <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                <span class="mx-1">&bullet;</span>
+                                <span>Views: {{ post.views }}</span>  <!-- Display total views here -->
                               </div>
                               <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
                               <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
@@ -210,7 +238,13 @@
                                 <img src="{{ lifestyle_first_post.BlogCover.url }}" alt="" class="img-fluid">
                             </a>
                             <div>
-                                <div class="post-meta"><span class="date">{{ lifestyle_first_post.category.name }}</span> <span class="mx-1">&bullet;</span> <span>{{ lifestyle_first_post.created_at|date:"M d, Y" }}</span></div>
+                                <div class="post-meta">
+                                  <span class="date">{{ lifestyle_first_post.category.name }}</span> 
+                                  <span class="mx-1">&bullet;</span> 
+                                  <span>{{ lifestyle_first_post.created_at|date:"M d, Y" }}</span>
+                                  <span class="mx-1">&bullet;</span>
+                                  <span>Views: {{ lifestyle_first_post.views }}</span>  <!-- Display total views here -->
+                                </div>
                                 <h3><a href="{% url 'Blog:single_post' id=lifestyle_first_post.id %}">{{ lifestyle_first_post.title|truncatechars:65 }}</a></h3>
                                 <p class="txt">{{ lifestyle_first_post.intro|truncatechars:350 }}</p>
                                 <div class="d-flex align-items-center author">
@@ -230,7 +264,10 @@
                               <a href="{% url 'Blog:single_post' id=post.id %}"><img src="{{ post.BlogCover.url }}" alt="" class="image_crd"></a>
                               <div class="post-meta">
                                 <span class="date">{{ post.category.name }}</span>
-                                <span class="mx-1">&bullet;</span> <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                <span class="mx-1">&bullet;</span> 
+                                <span>{{ post.created_at|date:"M d, Y" }}</span>
+                                <span class="mx-1">&bullet;</span>
+                                  <span>Views: {{ post.views }}</span>  <!-- Display total views here -->
                               </div>
                               <h2 class="mb-2"><a href="{% url 'Blog:single_post' id=post.id %}">{{ post.title|truncatechars:67 }}</a></h2>
                               <p class="mb-4 d-block txt">{{ post.intro|truncatechars:144 }}</p>
@@ -274,6 +311,8 @@
                     <span class="date">{{ popular_post.category.name }}</span> 
                     <span class="mx-1">&bullet;</span> 
                     <span>{{ popular_post.created_at|date:"M j, Y" }}</span>
+                    <span class="mx-1">&bullet;</span>
+                    <span>Views: {{ popular_post.views }}</span>  <!-- Display total views here -->
                   </div>
                   <h2 class="mb-2">
                     <a href="{% url 'Blog:single_post' popular_post.id %}">{{ popular_post.title }}</a>
@@ -291,6 +330,8 @@
                     <span class="date">{{ trending_post.category.name }}</span> 
                     <span class="mx-1">&bullet;</span> 
                     <span>{{ trending_post.created_at|date:"M j, Y" }}</span>
+                    <span class="mx-1">&bullet;</span>
+                    <span>Views: {{ trending_post.views }}</span>  <!-- Display total views here -->
                   </div>
                   <h2 class="mb-2">
                     <a href="{% url 'Blog:single_post' trending_post.id %}">{{ trending_post.title }}</a>
@@ -308,6 +349,8 @@
                     <span class="date">{{ latest_post.category.name }}</span> 
                     <span class="mx-1">&bullet;</span> 
                     <span>{{ latest_post.created_at|date:"M j, Y" }}</span>
+                    <span class="mx-1">&bullet;</span>
+                    <span>Views: {{ latest_post.views }}</span>  <!-- Display total views here -->
                   </div>
                   <h2 class="mb-2">
                     <a href="{% url 'Blog:single_post' latest_post.id %}">{{ latest_post.title }}</a>
@@ -316,6 +359,27 @@
                 </div>
                 {% endfor %}
               </div> <!-- End Latest -->
+              <div class="aside-block">
+                <h3 class="aside-title">Categories</h3>
+                <ul class="aside-links list-unstyled">
+                  {% for category in categories %}
+                    <li>
+                      <a href="{% url 'Blog:category_posts' category.slug %}">
+                        <i class="bi bi-chevron-right"></i> {{ category.name }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End Categories -->
+    
+              <div class="aside-block">
+                <h3 class="aside-title">Tags</h3>
+                <ul class="aside-tags list-unstyled">
+                  {% for tag in tags %}
+                    <li><a href="{% url 'tagged_posts' tag.slug %}">{{ tag.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End Tags -->
             </div>
           </aside>
         </div>

@@ -16,6 +16,8 @@
               <span class="date">{{ post.category.name }}</span>
               <span class="mx-1">&bullet;</span>
               <span>{{ post.created_at|date:"M jS 'y" }}</span>
+              <span class="mx-1">&bullet;</span>
+              <span>Views: {{ total_views }}</span>  <!-- Display total views here -->
             </div>
             <div class="post-meta">
               <img src="{{ post.author.userprofile.image.url }}" alt="" class="base-pfp mr-1">

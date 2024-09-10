@@ -29,20 +29,21 @@ class Tag(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=500)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.PositiveIntegerField(unique=True, blank=True, null=True)
     intro = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
     BlogCover = models.ImageField(upload_to='blog_covers/')
     views = models.PositiveIntegerField(default=0)
-    last_viewed = models.DateTimeField(auto_now=True)  # Add this field
+    last_viewed = models.DateTimeField(auto_now=True)
     tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        if not self.slug:
+            self.slug = self.id
+            self.save()
 
     def increment_views(self):
         self.views += 1
